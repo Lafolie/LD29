@@ -32,9 +32,9 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.bubbletimer = 0
 		
 		if player == 1 then
-			self.healthbarPosition = vector(25,10)
+			self.healthbarPosition = vector(12,5)
 		else
-			self.healthbarPosition = vector(225,10)
+			self.healthbarPosition = vector(112,5)
 		end
 		
 		self.damagingShapes = {}
@@ -209,22 +209,24 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		local lifeperc = self.hp/1000
 		local r, g = (1-lifeperc*lifeperc)*255, (1-(1-lifeperc)*(1-lifeperc))*255
 		love.graphics.setColor(r, g, 0)
-		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*150, 10)
+		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*75, 5)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 150, 10)
+		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 75, 5)
 
 		for i = 1, self.wins do
 			local startx = self.healthbarPosition.x
-			local dist = 18
+			local dist = 9
 			if self.player == 1 then
-				startx = startx + 150
+				startx = startx + 80
 				dist = -dist
+			else
+				startx = startx - 5
 			end
 
 			love.graphics.setColor(255, 255, 0)
-			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 4)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 9, 3)
 			love.graphics.setColor(200, 50, 50)
-			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 3)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 9, 2)
 		end
 	end
 }
