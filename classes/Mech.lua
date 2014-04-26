@@ -120,7 +120,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	collideWith = function(self, shape, other, dx, dy)
 		if self.damagingShapes[shape] and class.isinstance(other, Living) then
 			other:damage(self.damagingShapes[shape].damage)
-			if self.damagingShapes[shape] then
+			if self.damagingShapes[shape].singleHit then
 				self.damagingShapes[shape] = false
 			end
 			
