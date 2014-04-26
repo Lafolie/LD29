@@ -23,6 +23,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.hp = 1000
 		self.facingLeft = faceLeft
 		self.controller = Controller(player)
+		self.animtimer = 0
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -32,13 +33,21 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		
 		self.damagingShapes = {}
 
-		self.imageTemplate = love.graphics.newImage("gfx/S_TempMech.png")
-		self.shader = Shader("mechPaint.glsl")
-		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_TempMech.png")
-		self.shader.uniforms.user_color = {1, 0, 1}
-
-		self.size = vector(self.imageTemplate:getDimensions())
+		self.imageTemplate = love.graphics.newImage("gfx/S_MechAtlas.png")
+		self.shader = Shader("texAtlas.glsl", "mechPaint.glsl")
+		self.size = vector(32, 32)
 		self.imageOffset = -self.size/2
+
+		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_MaskAtlas.png")
+		self.shader.uniforms.user_color = {1, 0, 1}
+		self.shader.uniforms.cel_size =
+			{
+				self.size.x/self.imageTemplate:getWidth(),
+				self.size.y/self.imageTemplate:getHeight(),
+				1,
+				1
+			}
+		self.shader.uniforms.current_cel = {1, 1}
 
 		self.bodyOffset = vector(-3, -5)
 		self.armOffset = vector(8, 0)
@@ -106,6 +115,12 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
 			self.arm:moveTo((self.pos + self.armOffset):unpack())
 			self.fist:moveTo((self.pos + self.fistOffset):unpack())
+		end
+
+		self.animtimer = self.animtimer + dt
+		if self.animtimer >= 1 then
+			self.animtimer = self.animtimer - 1
+			self.shader.uniforms.current_cel = {self.shader.uniforms.current_cel[1]%2+1, 1}
 		end
 	end,
 	
