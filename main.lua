@@ -132,8 +132,10 @@ end
 
 function love.keypressed(key)
 	if key == "escape" then
-		print("What's wrong Lafolie?!")
-		love.timer.sleep(2)
+		print("What's wrong, Lafolie?!")
+		if os.getenv("USER") == "Dale" then
+			love.timer.sleep(2)
+		end
 		love.event.quit()
 	end
 
