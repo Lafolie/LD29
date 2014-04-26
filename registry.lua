@@ -1,9 +1,11 @@
 local registry = {}
 registry.shapes = {}
 registry.entities = {}
+registry.joysticks= {}
 
 local shapes = setmetatable({}, {__mode = "kv"})
 local entities = setmetatable({}, {__mode = "v"})
+local joysticks = setmetatable({}, {__mode = "kv"})
 
 --- SHAPES ---
 function registry.shapes.register(entity, shape)
@@ -27,6 +29,19 @@ end
 
 function registry.entities.iterate()
 	return ipairs(entities)
+end
+
+--- JOYSTICKS ---
+function registry.joysticks.bind(controller, joystick)
+	joysticks[joystick:getGUID()] = controller
+end
+
+function registry.joysticks.unbind(joystick)
+	joysticks[joystick:getGUID()] = nil
+end
+
+function registry.joysticks.getController(joystick)
+	return joysticks[joystick:getGUID()]
 end
 
 return registry

@@ -35,16 +35,20 @@ end
 local function collision_end(dt, a, b, dx, dy)
 end
 
-local mech
+local mech1, mech2, controllerSelect
 function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
 	collider = HC(100, collision, collision_end)
 	mech1 = Mech(100, 150, 1, false)
 	mech2 = Mech(300, 150, 2, true)
+
+	controllerSelect = false
 end
 
 function love.update(dt)
+	if controllerSelect then return end
+
 	collider:update(dt)
 	if mech1.pos.x > mech2.pos.x then
 		mech1.enemyDirection = 'left'
@@ -74,6 +78,22 @@ function love.draw()
 			v:draw()
 		end
 	end
+
+	if controllerSelect then
+		love.graphics.origin()
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.rectangle("fill", 200, 150, 400, 300)
+
+		love.graphics.setColor(255, 255, 255)
+		local str = "A new gamepad was used, please select a player:\n"
+		if not mech1.controller:hasJoystick() then
+			str = str .. "Press '1' if it's for player 1\n"
+		end
+		if not mech2.controller:hasJoystick() then
+			str = str .. "Press '2' if it's for player 2\n"
+		end
+		love.graphics.printf(str .. "Press 'q' if it was by mistake\n", 220, 165, 360)
+	end
 end
 
 function love.keypressed(key)
@@ -81,6 +101,27 @@ function love.keypressed(key)
 		print("What's wrong Lafolie?!")
 		love.timer.sleep(2)
 		love.event.quit()
+	end
+
+	if controllerSelect then
+		if key == "1" and not mech1.controller:hasJoystick() then
+			mech1.controller:setJoystick(controllerSelect)
+		elseif key == "2" and not mech2.controller:hasJoystick() then
+			mech2.controller:setJoystick(controllerSelect)
+		elseif key == "q" then
+		else
+			return
+		end
+		controllerSelect = false
+	end
+end
+
+function love.joystickpressed(joystick, button)
+	local controller = registry.joysticks.getController(joystick)
+	if not controller and not
+			(mech1.controller:hasJoystick() and mech2.controller:hasJoystick()) then
+		print("New controller used")
+		controllerSelect = joystick
 	end
 end
 
