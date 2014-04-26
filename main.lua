@@ -64,6 +64,14 @@ function love.draw()
 	end
 end
 
+function love.keypressed(key)
+	if key == "escape" then
+		print("What's wrong Lafolie?!")
+		love.timer.sleep(2)
+		love.event.quit()
+	end
+end
+
 function print(...)
 	local t = {...}
 	for i, v in ipairs(t) do
