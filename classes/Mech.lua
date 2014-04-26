@@ -5,6 +5,7 @@ require "classes.Living"
 require "classes.Shader"
 require "classes.Controller"
 require "classes.Projectile"
+require "classes.Bubble"
 
 local vector = require "lib.hump.vector"
 local registry = require "registry"
@@ -27,6 +28,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.controller = Controller(player)
 		self.animtimer = 0
 		self.projectile = nil
+		self.bubbles = {}
+		self.bubbletimer = 0
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -82,18 +85,27 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		local movement = vector(0, 0)
 		if self.pos.y < FLOORHEIGHT+self.imageOffset.y then
 			-- gravitay
-			self.gravity = self.gravity + 3 * dt
+			self.gravity = self.gravity + 5 * dt
 			movement.y = self.gravity
 		else
 			self.gravity = 0
 		end
 
+		self.bubbletimer = self.bubbletimer + dt
 		if self.controller:isDown("up") then
 			movement.y = movement.y - 50
 			self.gravity = 0
+			if self.bubbletimer > 0.1 then
+				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3))
+				self.bubbletimer = 0
+			end
 		end
 		if self.controller:isDown("down") then
 			movement.y = movement.y + 50
+			if self.bubbletimer > 0.1 then
+				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3, 1, -1))
+				self.bubbletimer = 0
+			end
 		end
 		if self.controller:isDown("left") then
 			movement.x = movement.x - 50
@@ -138,6 +150,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 				self.animtimer = self.animtimer - 0.125
 				self.shader.uniforms.current_cel = {self.shader.uniforms.current_cel[1]%6+1, 1}
 			end
+		end
+
+		for i, v in pairs(self.bubbles) do
+			if v:dead() then self.bubbles[i] = nil end
 		end
 	end,
 	
