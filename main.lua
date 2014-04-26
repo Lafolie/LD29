@@ -57,3 +57,13 @@ function love.draw()
 		end
 	end
 end
+
+function print(...)
+	local t = {...}
+	for i, v in ipairs(t) do
+		t[i] = tostring(v)
+	end
+
+	local str = table.concat(t, "\t")
+	return io.write("[" .. os.date() .. "] " .. str .. "\n")
+end
