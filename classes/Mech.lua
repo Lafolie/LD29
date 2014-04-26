@@ -32,9 +32,9 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.bubbletimer = 0
 		
 		if player == 1 then
-			self.healthbarPosition = vector(25,10)
+			self.healthbarPosition = vector(12,5)
 		else
-			self.healthbarPosition = vector(225,10)
+			self.healthbarPosition = vector(112,5)
 		end
 		
 		self.damagingShapes = {}
@@ -95,15 +95,27 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if self.controller:isDown("up") then
 			movement.y = movement.y - 50
 			self.gravity = 0
+<<<<<<< HEAD
 			if self.bubbletimer > 0.025 then
 				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3))
+=======
+			if self.bubbletimer > 0.1 then
+				local xoff = self.facingLeft and 10 or -15
+				table.insert(self.bubbles, Bubble(self.pos.x+xoff, self.pos.y+3))
+>>>>>>> e0a75a31dfc3b9a7341915a791517eee82f35e79
 				self.bubbletimer = 0
 			end
 		end
 		if self.controller:isDown("down") then
 			movement.y = movement.y + 50
+<<<<<<< HEAD
 			if self.bubbletimer > 0.025 then
 				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3, 1, -1))
+=======
+			if self.bubbletimer > 0.1 then
+				local xoff = self.facingLeft and 10 or -15
+				table.insert(self.bubbles, Bubble(self.pos.x+xoff, self.pos.y+3, 1, -1))
+>>>>>>> e0a75a31dfc3b9a7341915a791517eee82f35e79
 				self.bubbletimer = 0
 			end
 		end
@@ -129,7 +141,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 		if self.controller:isDown("hadouken") and not self.projectile then
 			local dir = self.facingLeft and -1 or 1
-			self.projectile = Projectile(self.pos.x + dir * 30, self.pos.y, dir * 30, 0)
+			self.projectile = Projectile(self.pos.x + dir * 25, self.pos.y, dir * 30, 0)
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
@@ -207,22 +219,24 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		local lifeperc = self.hp/1000
 		local r, g = (1-lifeperc*lifeperc)*255, (1-(1-lifeperc)*(1-lifeperc))*255
 		love.graphics.setColor(r, g, 0)
-		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*150, 10)
+		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*75, 5)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 150, 10)
+		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 75, 5)
 
 		for i = 1, self.wins do
 			local startx = self.healthbarPosition.x
-			local dist = 18
+			local dist = 9
 			if self.player == 1 then
-				startx = startx + 150
+				startx = startx + 80
 				dist = -dist
+			else
+				startx = startx - 5
 			end
 
 			love.graphics.setColor(255, 255, 0)
-			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 4)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 9, 3)
 			love.graphics.setColor(200, 50, 50)
-			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 3)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 9, 2)
 		end
 	end
 }

@@ -5,12 +5,15 @@ require "classes.Living"
 local vector = require "lib.hump.vector"
 local registry = require "registry"
 
+local img = love.graphics.newImage("gfx/torpedo.png")
+
 class "Projectile" (Entity, Actor, Drawable, Living)
 {
 	__init__ = function(self, x, y, vx, vy)
 		Entity.__init__(self)
 		self.pos = vector(x, y)
 		self.vel = vector(vx, vy)
+		self.offset = vector(-img:getWidth()+5, -2)
 		self.hitTarget = false
 
 		self.body = HCShapes.newCircleShape(x, y, 5)
@@ -24,7 +27,7 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 
 	draw = function(self)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.circle("fill", self.pos.x, self.pos.y, 5)
+		love.graphics.draw(img, (self.pos+self.offset):unpack())
 	end,
 
 	dead = function(self)
