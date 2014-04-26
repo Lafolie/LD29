@@ -26,8 +26,8 @@ local function collision(dt, aShape, bShape, dx, dy)
 	end
 
 	-- entity:collideWith(shape, other, first, dx, dy)
-	a:collideWith(aShape, b, true, dx, dy)
-	b:collideWith(bShape, a, false, 0, 0)
+	a:collideWith(aShape, b, dx, dy)
+	b:collideWith(bShape, a, 0, 0)
 end
 
 local function collision_end(dt, a, b, dx, dy)

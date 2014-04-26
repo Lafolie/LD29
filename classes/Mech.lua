@@ -1,6 +1,7 @@
 require "classes.Entity"
 require "classes.Drawable"
 require "classes.Actor"
+require "classes.Living"
 
 local registry = require "registry"
 
@@ -27,7 +28,7 @@ local keymap =
 	},
 }
 
-class "Mech" (Entity, Drawable, Actor)
+class "Mech" (Entity, Drawable, Actor, Living)
 {
 	__init__ = function(self, x, y, player)
 		Entity.__init__(self)
@@ -52,6 +53,12 @@ class "Mech" (Entity, Drawable, Actor)
 	update = function(self, dt)
 		if love.keyboard.isDown(keymap[self.player].up) then
 			self.y = self.y - 50 * dt
+		end
+	end,
+
+	collideWith = function(self, shape, other, dx, dy)
+		if shape == self.fist and class.isinstance(other, Living) then
+			other:damage(9001)
 		end
 	end,
 
