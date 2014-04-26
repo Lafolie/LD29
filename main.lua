@@ -2,6 +2,11 @@ class = require "lib.slither" -- BOO, globals
 local HC = require "lib.HardonCollider"
 local registry = require "registry"
 
+HCShapes = require "lib.HardonCollider.shapes"
+function HCShapes.newRectangleShape(x, y, w, h)
+	return HCShapes.newPolygonShape(x, y, x+w, y, x+w, y+h, x, y+h)
+end
+
 require "classes.Actor"
 require "classes.Drawable"
 require "classes.Mech"
@@ -31,7 +36,7 @@ end
 local mech
 function love.load()
 	collider = HC(100, collision, collision_end)
-	mech = Mech(50, 50)
+	mech = Mech(400, 300)
 end
 
 function love.update(dt)

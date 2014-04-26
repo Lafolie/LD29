@@ -7,10 +7,12 @@ local entities = setmetatable({}, {__mode = "v"})
 
 --- SHAPES ---
 function registry.shapes.register(entity, shape)
+	collider:addShape(shape)
 	shapes[shape] = entity
 end
 
 function registry.shapes.unregister(shape)
+	collider:remove(shape)
 	shapes[shape] = nil
 end
 
