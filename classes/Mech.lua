@@ -45,7 +45,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.imageOffset = -self.size/2
 
 		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_Mech.png")
-		self.shader.uniforms.user_color = {1, 0, 1}
+		self.shader.uniforms.user_color = {love.math.random(), love.math.random(), love.math.random()}
 		self.shader.uniforms.cel_size =
 			{
 				self.size.x/self.imageTemplate:getWidth(),
