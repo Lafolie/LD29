@@ -49,34 +49,30 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		
 		self.damagingShapes = {}
 
-		self.bodyOffset = vector(0, 0)
-		self.rightArmOffset = vector(60, 0)
-		self.leftLegOffset = vector(-20, 75)
-		self.rightLegOffset = vector(5, 75)
-		self.rightFistOffset = vector(105, 0)
-
-		self.body = self.pos + self.bodyOffset
-		self.rightArm = self.pos + self.rightArmOffset
-		self.leftLeg = self.pos + self.leftLegOffset
-		self.rightLeg = self.pos + self.rightLegOffset
-		self.rightFist = self.pos + self.rightFistOffset
-
-		self.body = HCShapes.newRectangleShape(self.body.x-30, self.body.y-75, 60, 150)
-		self.rightArm = HCShapes.newRectangleShape(self.rightArm.x-30, self.rightArm.y-7, 60, 15)
-		self.leftLeg = HCShapes.newRectangleShape(self.leftLeg.x, self.leftLeg.y, 15, 60)
-		self.rightLeg = HCShapes.newRectangleShape(self.rightLeg.x, self.rightLeg.y, 15, 60)
-		self.rightFist = HCShapes.newRectangleShape(self.rightFist.x-15, self.rightFist.y-15, 30, 30)
-
-		registry.shapes.register(self, self.body)
-		registry.shapes.register(self, self.rightArm)
-		registry.shapes.register(self, self.leftLeg)
-		registry.shapes.register(self, self.rightArm)
-		registry.shapes.register(self, self.rightFist)
-
 		self.imageTemplate = love.graphics.newImage("gfx/S_TempMech.png")
 		self.shader = Shader("mechPaint.glsl")
 		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_TempMech.png")
 		self.shader.uniforms.user_color = {1, 0, 1}
+
+		self.imageOffset = -vector(self.imageTemplate:getDimensions())/2
+
+		self.bodyOffset = vector(-3, -5)
+		self.armOffset = vector(8, 0)
+		self.fistOffset = vector(12, 0)
+
+		self.body = self.pos + self.bodyOffset
+		self.arm = self.pos + self.armOffset
+		self.fist = self.pos + self.fistOffset
+
+		self.body = HCShapes.newRectangleShape(self.body.x, self.body.y, 20, 19)
+		self.arm = HCShapes.newRectangleShape(self.arm.x, self.arm.y, 6, 7)
+		self.fist = HCShapes.newRectangleShape(self.fist.x, self.fist.y, 6, 7)
+		
+		self.damagingShapes = {}
+
+		registry.shapes.register(self, self.body)
+		registry.shapes.register(self, self.arm)
+		registry.shapes.register(self, self.fist)
 	end,
 
 	update = function(self, dt)
@@ -112,13 +108,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			if self.pos.y > 460 then self.pos.y = 460 end
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
-			self.rightArm:moveTo((self.pos + self.rightArmOffset):unpack())
-			self.rightFist:moveTo((self.pos + self.rightFistOffset):unpack())
+			self.arm:moveTo((self.pos + self.armOffset):unpack())
+			self.fist:moveTo((self.pos + self.fistOffset):unpack())
 		end
 	end,
 	
 	punch =  function(self, dt)
-		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
+		self.damagingShapes[self.fist] = { damage = 100, stuns = false, singleHit = true }
 	end,
 
 	collideWith = function(self, shape, other, dx, dy)
@@ -140,22 +136,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	draw = function(self)
 		love.graphics.setColor(255, 255, 255)
-		drawBbox(self.body)
-		drawBbox(self.rightArm)
-		drawBbox(self.leftLeg)
-		drawBbox(self.rightLeg)
-
-		love.graphics.setColor(0, 255, 0)
-		drawBbox(self.rightFist)
-
-		love.graphics.setColor(255, 0, 0)
-		love.graphics.point(self.pos.x, self.pos.y)
-
-		love.graphics.setColor(255, 255, 255)
 		self.shader:apply()
-		love.graphics.draw(self.imageTemplate, self.pos.x, self.pos.y)
+		love.graphics.draw(self.imageTemplate, (self.pos + self.imageOffset):unpack())
 		self.shader:unapply()
-		
+		love.graphics.setColor(255, 255, 255, 50)
+		drawBbox(self.body)
+		drawBbox(self.arm)
+		drawBbox(self.fist)
 		self:drawHPBars()
 	end,
 	

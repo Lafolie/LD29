@@ -35,6 +35,8 @@ end
 
 local mech
 function love.load()
+	love.graphics.setDefaultFilter("nearest", "nearest")
+
 	collider = HC(100, collision, collision_end)
 	mech1 = Mech(200, 300, 1)
 	mech2 = Mech(600, 300, 2)
