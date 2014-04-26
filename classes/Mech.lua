@@ -34,6 +34,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		Entity.__init__(self)
 		self.player = player
 		self.x, self.y = x, y
+		
+		self.damagingShapes = {}
 
 		self.body = HCShapes.newRectangleShape(self.x-30, self.y-75,
 			60, 150)
@@ -43,6 +45,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			15, 60)
 		self.rightLeg = HCShapes.newRectangleShape(self.x+5, self.y+75,
 			15, 60)
+		self.rightFist = HCShapes.newRectangleShape(self.x+90,self.y-15,
+			30, 30)
+		
+		table.insert(self.damagingShapes,self.rightFist)
 
 		registry.shapes.register(self, self.body)
 		registry.shapes.register(self, self.rightArm)
@@ -68,6 +74,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		drawBbox(self.rightArm)
 		drawBbox(self.leftLeg)
 		drawBbox(self.rightLeg)
+		drawBbox(self.rightFist)
 
 		love.graphics.setColor(255, 0, 0)
 		love.graphics.point(self.x, self.y)
