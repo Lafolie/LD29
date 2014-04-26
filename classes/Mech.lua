@@ -110,7 +110,9 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if movement.x ~= 0 or movement.y ~= 0 then
 			self.pos = self.pos + movement*dt
 
-			if self.pos.y > FLOORHEIGHT then self.pos.y = FLOORHEIGHT end
+			if self.pos.y > FLOORHEIGHT+self.imageOffset.y then
+				self.pos.y = FLOORHEIGHT+self.imageOffset.y
+			end
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
 			self.arm:moveTo((self.pos + self.armOffset):unpack())
