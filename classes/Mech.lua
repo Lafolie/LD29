@@ -134,8 +134,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 		if movement.x ~= 0 then
 			self.animtimer = self.animtimer + dt
-			if self.animtimer >= 0.1 then
-				self.animtimer = self.animtimer - 0.1
+			if self.animtimer >= 0.125 then
+				self.animtimer = self.animtimer - 0.125
 				self.shader.uniforms.current_cel = {self.shader.uniforms.current_cel[1]%6+1, 1}
 			end
 		end

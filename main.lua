@@ -7,7 +7,7 @@ function HCShapes.newRectangleShape(x, y, w, h)
 	return HCShapes.newPolygonShape(x, y, x+w, y, x+w, y+h, x, y+h)
 end
 
-FLOORHEIGHT = 230
+FLOORHEIGHT = 120
 
 require "classes.Actor"
 require "classes.Drawable"
@@ -51,8 +51,8 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
 	collider = HC(100, collision, collision_end)
-	mech1 = Mech(100, 150, 1, false)
-	mech2 = Mech(300, 150, 2, true)
+	mech1 = Mech(50, 80, 1, false)
+	mech2 = Mech(150, 80, 2, true)
 	
 	mech2.controller = AIController(2,mech2,mech1)
 
@@ -100,7 +100,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	love.graphics.scale(2, 2)
+	love.graphics.scale(4, 4)
 
 	love.graphics.setColor(0xEA, 0xB9, 0x88)
 	love.graphics.rectangle("fill", 0, 0, 400, 300)
