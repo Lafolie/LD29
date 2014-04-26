@@ -3,6 +3,7 @@ require "classes.Drawable"
 require "classes.Actor"
 require "classes.Living"
 require "classes.Shader"
+require "classes.Controller"
 
 local vector = require "lib.hump.vector"
 local registry = require "registry"
@@ -11,26 +12,6 @@ local function drawBbox(shape)
 	local x1, y1, x2, y2 = shape:bbox()
 	return love.graphics.rectangle("fill", x1, y1, x2-x1, y2-y1)
 end
-
-local keymap =
-{
-	[1] =
-	{
-		up = "w",
-		down = "s",
-		left = "a",
-		right = "d",
-		punch = " "
-	},
-	[2] =
-	{
-		up = "up",
-		down = "down",
-		left = "left",
-		right = "right",
-		punch = " "
-	},
-}
 
 class "Mech" (Entity, Drawable, Actor, Living)
 {
@@ -41,6 +22,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.gravity = 0
 		self.hp = 1000
 		self.facingLeft = faceLeft
+		self.controller = Controller(player)
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -93,26 +75,26 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self.gravity = 0
 		end
 
-		if love.keyboard.isDown(keymap[self.player].up) then
+		if self.controller:isDown("up") then
 			movement.y = movement.y - 50
 			self.gravity = 0
 		end
-		if love.keyboard.isDown(keymap[self.player].down) then
+		if self.controller:isDown("down") then
 			movement.y = movement.y + 50
 		end
-		if love.keyboard.isDown(keymap[self.player].left) then
+		if self.controller:isDown("left") then
 			movement.x = movement.x - 50
 			if not self.facingLeft then
 				self:flipFacing()
 			end
 		end
-		if love.keyboard.isDown(keymap[self.player].right) then
+		if self.controller:isDown("right") then
 			movement.x = movement.x + 50
 			if self.facingLeft then
 				self:flipFacing()
 			end
 		end
-		if love.keyboard.isDown(keymap[self.player].punch) then
+		if self.controller:isDown("punch") then
 			self:punch(dt)
 		end
 
