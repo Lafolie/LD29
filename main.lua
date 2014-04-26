@@ -7,6 +7,8 @@ function HCShapes.newRectangleShape(x, y, w, h)
 	return HCShapes.newPolygonShape(x, y, x+w, y, x+w, y+h, x, y+h)
 end
 
+FLOORHEIGHT = 230
+
 require "classes.Actor"
 require "classes.Drawable"
 require "classes.Mech"
@@ -38,8 +40,8 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
 	collider = HC(100, collision, collision_end)
-	mech1 = Mech(200, 300, 1)
-	mech2 = Mech(600, 300, 2)
+	mech1 = Mech(100, 150, 1)
+	mech2 = Mech(300, 150, 2)
 end
 
 function love.update(dt)
@@ -53,6 +55,8 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.scale(2, 2)
+
 	for i, v in registry.entities.iterate() do
 		if class.isinstance(v, Drawable) then
 			v:draw()

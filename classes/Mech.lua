@@ -77,7 +77,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	update = function(self, dt)
 		local movement = vector(0, 0)
-		if self.pos.y < 460 then
+		if self.pos.y < FLOORHEIGHT then
 			-- gravitay
 			self.gravity = self.gravity + 3 * dt
 			movement.y = self.gravity
@@ -105,7 +105,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if movement.x ~= 0 or movement.y ~= 0 then
 			self.pos = self.pos + movement*dt
 
-			if self.pos.y > 460 then self.pos.y = 460 end
+			if self.pos.y > FLOORHEIGHT then self.pos.y = FLOORHEIGHT end
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
 			self.arm:moveTo((self.pos + self.armOffset):unpack())
