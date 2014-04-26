@@ -28,7 +28,7 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 	end,
 
 	dead = function(self)
-		return self.hitTarget or self.pos.x < -5 or self.pos.x > 405
+		return self.hitTarget or self.pos.x < -5 or self.pos.x > 205
 	end,
 
 	kill = function(self)
