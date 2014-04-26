@@ -8,10 +8,14 @@ class "Shader"
 		self.shader = love.graphics.newShader(srcA, srcB)
 		print(self.shader:getWarnings())
 
+		local uniformstore = {}
 		self.uniforms = setmetatable({},
 			{
+				__index = uniformstore,
+
 				__newindex = function(_, name, value)
 					self.shader:send(name, value)
+					uniformstore[name] = value
 				end,
 			})
 	end,
