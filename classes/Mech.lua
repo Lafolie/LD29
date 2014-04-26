@@ -42,9 +42,9 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.hp = 1000
 		
 		if player == 1 then
-			self.healthbarPosiiton = vector(50,20)
+			self.healthbarPosition = vector(25,10)
 		else
-			self.healthbarPosiiton = vector(450,20)
+			self.healthbarPosition = vector(225,10)
 		end
 		
 		self.damagingShapes = {}
@@ -131,6 +131,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.hp = self.hp - amount
 		if self.hp < 0 then
 			self.hp = 0
+			print("Babooooom bitches")
 		end
 	end,
 
@@ -143,13 +144,15 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		drawBbox(self.body)
 		drawBbox(self.arm)
 		drawBbox(self.fist)
+
 		self:drawHPBars()
 	end,
 	
 	drawHPBars = function(self)
-		love.graphics.setColor(0, 255, 0)
-		love.graphics.rectangle("fill", self.healthbarPosiiton.x, self.healthbarPosiiton.y, self.hp/1000*300, 20)
+		local lifeperc = self.hp/1000
+		love.graphics.setColor((1-lifeperc)*255, lifeperc*255, 0)
+		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*150, 10)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.rectangle("line", self.healthbarPosiiton.x, self.healthbarPosiiton.y, 300, 20)
+		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 150, 10)
 	end
 }
