@@ -36,12 +36,12 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		
 		self.damagingShapes = {}
 
-		self.imageTemplate = love.graphics.newImage("gfx/M_Mech.png")
+		self.imageTemplate = love.graphics.newImage("gfx/S_Mech.png")
 		self.shader = Shader("texAtlas.glsl", "mechPaint.glsl")
 		self.size = vector(32, 32)
 		self.imageOffset = -self.size/2
 
-		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_MaskAtlas.png")
+		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_Mech.png")
 		self.shader.uniforms.user_color = {1, 0, 1}
 		self.shader.uniforms.cel_size =
 			{
@@ -134,8 +134,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 		if movement.x ~= 0 then
 			self.animtimer = self.animtimer + dt
-			if self.animtimer >= 0.1 then
-				self.animtimer = self.animtimer - 0.1
+			if self.animtimer >= 0.125 then
+				self.animtimer = self.animtimer - 0.125
 				self.shader.uniforms.current_cel = {self.shader.uniforms.current_cel[1]%6+1, 1}
 			end
 		end
@@ -179,10 +179,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			love.graphics.draw(self.imageTemplate, (self.pos + self.imageOffset).x, (self.pos + self.imageOffset).y)
 		end
 		self.shader:unapply()
-		love.graphics.setColor(255, 255, 255, 50)
+		--[[love.graphics.setColor(255, 255, 255, 50)
 		drawBbox(self.body)
 		drawBbox(self.arm)
-		drawBbox(self.fist)
+		drawBbox(self.fist)]]
 
 		self:drawHPBars()
 	end,
