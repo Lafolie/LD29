@@ -39,6 +39,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.player = player
 		self.pos = vector(x, y)
 		self.gravity = 0
+		self.hp = 1000
+		
+		if player == 1 then
+			self.healthbarPosiiton = vector(50,20)
+		else
+			self.healthbarPosiiton = vector(450,20)
+		end
 		
 		self.damagingShapes = {}
 
@@ -59,8 +66,6 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.leftLeg = HCShapes.newRectangleShape(self.leftLeg.x, self.leftLeg.y, 15, 60)
 		self.rightLeg = HCShapes.newRectangleShape(self.rightLeg.x, self.rightLeg.y, 15, 60)
 		self.rightFist = HCShapes.newRectangleShape(self.rightFist.x-15, self.rightFist.y-15, 30, 30)
-		
-		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
 
 		registry.shapes.register(self, self.body)
 		registry.shapes.register(self, self.rightArm)
@@ -98,7 +103,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			movement.x = movement.x + 50
 		end
 		if love.keyboard.isDown(keymap[self.player].punch) then
-			self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
+			self:punch(dt)
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
@@ -111,6 +116,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self.rightFist:moveTo((self.pos + self.rightFistOffset):unpack())
 		end
 	end,
+	
+	punch =  function(self, dt)
+		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
+	end,
 
 	collideWith = function(self, shape, other, dx, dy)
 		if self.damagingShapes[shape] and class.isinstance(other, Living) then
@@ -119,6 +128,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 				self.damagingShapes[shape] = false
 			end
 			
+		end
+	end,
+	
+	damage = function(self, amount)
+		self.hp = self.hp - amount
+		if self.hp < 0 then
+			self.hp = 0
 		end
 	end,
 
@@ -139,5 +155,14 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.shader:apply()
 		love.graphics.draw(self.imageTemplate, self.pos.x, self.pos.y)
 		self.shader:unapply()
+		
+		self:drawHPBars()
 	end,
+	
+	drawHPBars = function(self)
+		love.graphics.setColor(0, 255, 0)
+		love.graphics.rectangle("fill", self.healthbarPosiiton.x, self.healthbarPosiiton.y, self.hp/1000*300, 20)
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.rectangle("line", self.healthbarPosiiton.x, self.healthbarPosiiton.y, 300, 20)
+	end
 }
