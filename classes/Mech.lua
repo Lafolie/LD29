@@ -19,6 +19,7 @@ local keymap =
 		down = "s",
 		left = "a",
 		right = "d",
+		punch = " "
 	},
 	[2] =
 	{
@@ -26,6 +27,7 @@ local keymap =
 		down = "down",
 		left = "left",
 		right = "right",
+		punch = " "
 	},
 }
 
@@ -56,7 +58,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.rightLeg = HCShapes.newRectangleShape(self.rightLeg.x, self.rightLeg.y, 15, 60)
 		self.rightFist = HCShapes.newRectangleShape(self.rightFist.x-15, self.rightFist.y-15, 30, 30)
 		
-		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false }
+		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
 
 		registry.shapes.register(self, self.body)
 		registry.shapes.register(self, self.rightArm)
@@ -80,6 +82,9 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if love.keyboard.isDown(keymap[self.player].right) then
 			movement.x = movement.x - 50
 		end
+		if love.keyboard.isDown(keymap[self.player].punch) then
+			self.damagingShapes[self.rightFist] = { damage = 100, stuns = false, singleHit = true }
+		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
 			self.pos = self.pos - movement*dt
@@ -93,6 +98,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	collideWith = function(self, shape, other, dx, dy)
 		if self.damagingShapes[shape] and class.isinstance(other, Living) then
 			other:damage(self.damagingShapes[shape].damage)
+			if self.damagingShapes[shape] then
+				self.damagingShapes[shape] = false
+			end
+			
 		end
 	end,
 
