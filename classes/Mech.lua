@@ -150,7 +150,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	
 	drawHPBars = function(self)
 		local lifeperc = self.hp/1000
-		love.graphics.setColor((1-lifeperc)*255, lifeperc*255, 0)
+		local r, g = (1-lifeperc*lifeperc)*255, (1-(1-lifeperc)*(1-lifeperc))*255
+		love.graphics.setColor(r, g, 0)
 		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*150, 10)
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 150, 10)
