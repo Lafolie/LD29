@@ -28,31 +28,46 @@ class "AIController"
 		self.keymap = keymap[self.player]
 		self.playerMech = playerMech
 		self.enemyMech = enemyMech
-		print("AI")
+		print("Cerberus AI Initiated")
+		print("Kill mode Engaged")
 	end,
 
 	isDown = function(self, keyname)
 		if keyname == "up" then
 			return self:shouldJump()
-			--return self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y < -30
 		elseif keyname == "down" then
-			return self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y > 30
+			return self:shouldDive()
 		end
 
 		return false
 	end,
 	
 	shouldJump = function(self)
-		if self.enemyMech.projectile then
-			if self.enemyMech.projectile.pos.y > FLOORHEIGHT - 50 then
+		if self.enemyMech.projectile 
+		and ((self.enemyMech.projectile.pos.x < self.playerMech.pos.x + self.playerMech.size.x and self.enemyMech.projectile.vel.x > 0) 
+		or (self.enemyMech.projectile.pos.x > self.playerMech.pos.x - self.playerMech.size.x and self.enemyMech.projectile.vel.x < 0)) then
+			if self.enemyMech.projectile.pos.y + 5 > FLOORHEIGHT - self.playerMech.size.y then
 				if self.playerMech.pos.y - self.enemyMech.projectile.pos.y > -25 then
 					return true
 				end
 			end
+		else
+			return self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y < -15	
 		end
-		
-		return false
-			
+	end,
+	
+	shouldDive = function(self)
+		if self.enemyMech.projectile 
+		and ((self.enemyMech.projectile.pos.x < self.playerMech.pos.x + self.playerMech.size.x and self.enemyMech.projectile.vel.x > 0) 
+		or (self.enemyMech.projectile.pos.x > self.playerMech.pos.x - self.playerMech.size.x and self.enemyMech.projectile.vel.x < 0)) then
+			if self.enemyMech.projectile.pos.y + 5 < FLOORHEIGHT - self.playerMech.size.y then
+				if self.playerMech.pos.y - self.enemyMech.projectile.pos.y < 25 then
+					return true
+				end
+			end
+		else
+			return self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y > 15	
+		end
 	end,
 	
 	update = function(self, dt)
