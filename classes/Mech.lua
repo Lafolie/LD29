@@ -35,6 +35,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		Entity.__init__(self)
 		self.player = player
 		self.pos = vector(x, y)
+		self.gravity = 0
 		
 		self.damagingShapes = {}
 
@@ -67,22 +68,30 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	update = function(self, dt)
 		local movement = vector(0, 0)
+		if self.pos.y < 540 then
+			-- gravitay
+			self.gravity = self.gravity + 3 * dt
+			movement.y = self.gravity
+		else
+			self.gravity = 0
+		end
 
 		if love.keyboard.isDown(keymap[self.player].up) then
-			movement.y = movement.y + 50
+			movement.y = movement.y - 50
+			self.gravity = 0
 		end
 		if love.keyboard.isDown(keymap[self.player].down) then
-			movement.y = movement.y - 50
+			movement.y = movement.y + 50
 		end
 		if love.keyboard.isDown(keymap[self.player].left) then
-			movement.x = movement.x + 50
+			movement.x = movement.x - 50
 		end
 		if love.keyboard.isDown(keymap[self.player].right) then
-			movement.x = movement.x - 50
+			movement.x = movement.x + 50
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
-			self.pos = self.pos - movement*dt
+			self.pos = self.pos + movement*dt
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
 			self.rightArm:moveTo((self.pos + self.rightArmOffset):unpack())
