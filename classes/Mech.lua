@@ -95,14 +95,14 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if self.controller:isDown("up") then
 			movement.y = movement.y - 50
 			self.gravity = 0
-			if self.bubbletimer > 0.1 then
+			if self.bubbletimer > 0.025 then
 				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3))
 				self.bubbletimer = 0
 			end
 		end
 		if self.controller:isDown("down") then
 			movement.y = movement.y + 50
-			if self.bubbletimer > 0.1 then
+			if self.bubbletimer > 0.025 then
 				table.insert(self.bubbles, Bubble(self.pos.x-15, self.pos.y+3, 1, -1))
 				self.bubbletimer = 0
 			end

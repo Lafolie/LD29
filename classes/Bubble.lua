@@ -3,6 +3,7 @@ require "classes.Actor"
 require "classes.Drawable"
 
 local img = love.graphics.newImage("gfx/particles/P_Bubble.png")
+img:setFilter("nearest")
 
 class "Bubble" (Entity, Actor, Drawable)
 {
@@ -10,15 +11,18 @@ class "Bubble" (Entity, Actor, Drawable)
 		Entity.__init__(self)
 		self.x, self.y = x, y
 		self.mx, self.my = mx or 1, my or 1
+		self.size = love.math.random()*0.5
 
 		self.lifetime = love.math.random()*2+1
-		self.vx, self.vy = love.math.random()*3-1.5, love.math.random()*5
+		self.vx, self.vy = love.math.random()*6-1.5, love.math.random()*6
 	end,
 
 	update = function(self, dt)
 		self.lifetime = self.lifetime - dt
 		self.x = self.x + self.mx * self.vx * dt
 		self.y = self.y + self.my * self.vy * dt
+		self.size = self.size + 0.25 * dt
+		self.alpha = self.lifetime < 1 and math.floor(self.lifetime * 255) or 255
 	end,
 
 	dead = function(self)
@@ -26,7 +30,7 @@ class "Bubble" (Entity, Actor, Drawable)
 	end,
 
 	draw = function(self)
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.draw(img, self.x, self.y, 0, 0.5)
+		love.graphics.setColor(255, 255, 255, self.alpha)
+		love.graphics.draw(img, self.x, self.y, 0, self.size)
 	end,
 }
