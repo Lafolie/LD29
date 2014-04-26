@@ -36,7 +36,8 @@ end
 local mech
 function love.load()
 	collider = HC(100, collision, collision_end)
-	mech = Mech(400, 300)
+	mech1 = Mech(200, 300, 1)
+	mech2 = Mech(600, 300, 2)
 end
 
 function love.update(dt)

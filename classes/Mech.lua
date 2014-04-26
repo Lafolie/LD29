@@ -9,10 +9,29 @@ local function drawBbox(shape)
 	return love.graphics.rectangle("fill", x1, y1, x2-x1, y2-y1)
 end
 
+local keymap =
+{
+	[1] =
+	{
+		up = "w",
+		down = "s",
+		left = "a",
+		right = "d",
+	},
+	[2] =
+	{
+		up = "up",
+		down = "down",
+		left = "left",
+		right = "right",
+	},
+}
+
 class "Mech" (Entity, Drawable, Actor)
 {
-	__init__ = function(self, x, y)
+	__init__ = function(self, x, y, player)
 		Entity.__init__(self)
+		self.player = player
 		self.x, self.y = x, y
 
 		self.body = HCShapes.newRectangleShape(self.x-30, self.y-75,
@@ -30,10 +49,20 @@ class "Mech" (Entity, Drawable, Actor)
 		registry.shapes.register(self, self.rightArm)
 	end,
 
+	update = function(self, dt)
+		if love.keyboard.isDown(keymap[self.player].up) then
+			self.y = self.y - 50 * dt
+		end
+	end,
+
 	draw = function(self)
+		love.graphics.setColor(255, 255, 255)
 		drawBbox(self.body)
 		drawBbox(self.rightArm)
 		drawBbox(self.leftLeg)
 		drawBbox(self.rightLeg)
+
+		love.graphics.setColor(255, 0, 0)
+		love.graphics.point(self.x, self.y)
 	end,
 }
