@@ -15,16 +15,26 @@ require "classes.Mech"
 require "classes.AIController"
 
 local function collision(dt, aShape, bShape, dx, dy)
-	a = registry.shapes.getEntity(aShape)
-	b = registry.shapes.getEntity(bShape)
+	local a = registry.shapes.getEntity(aShape)
+	local b = registry.shapes.getEntity(bShape)
 
-	if not a and not b then
+	if not a or not b then
+		if not a then
+			collider:remove(aShape)
+		end
+		if not b then
+			collider:remove(bShape)
+		end
 		print("Collision occured between non-entities")
+		return
 	elseif a == b then -- Don't resolve internal collisions
 		-- Prevent this collision from registering again
 		local groupname = tostring(a)
 		collider:addToGroup(groupname, aShape, bShape)
 		-- Then don't resolve it
+		return
+	elseif a:dead() or b:dead() then
+		-- No collisions between dead objects
 		return
 	end
 
@@ -52,7 +62,28 @@ end
 function love.update(dt)
 	if controllerSelect then return end
 
+	local restart = false
+	if mech1.hp <= 0 then
+		mech2.wins = mech2.wins + 1
+		restart = true
+	end
+	if mech2.hp <= 0 then
+		mech1.wins = mech1.wins + 1
+		restart = true
+	end
+
 	collider:update(dt)
+
+	if restart then
+		mech1.hp = 1000
+		mech2.hp = 1000
+		mech1.pos.x, mech1.pos.y = 100, 150
+		mech2.pos.x, mech2.pos.y = 300, 150
+
+		if mech1.projectile then mech1.projectile:kill() end
+		if mech2.projectile then mech2.projectile:kill() end
+	end
+
 	if mech1.pos.x > mech2.pos.x then
 		mech1.enemyDirection = 'left'
 		mech2.enemyDirection = 'right'
@@ -62,7 +93,7 @@ function love.update(dt)
 	end
 	
 	for i, v in registry.entities.iterate() do
-		if class.isinstance(v, Actor) then
+		if class.isinstance(v, Actor) and not v:dead() then
 			v:update(dt)
 		end
 	end
@@ -77,7 +108,7 @@ function love.draw()
 	love.graphics.rectangle("fill", 0, 0, 400, FLOORHEIGHT)
 
 	for i, v in registry.entities.iterate() do
-		if class.isinstance(v, Drawable) then
+		if class.isinstance(v, Drawable) and not v:dead() then
 			v:draw()
 		end
 	end

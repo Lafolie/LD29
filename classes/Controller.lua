@@ -8,7 +8,8 @@ local keymap =
 		down = "s",
 		left = "a",
 		right = "d",
-		punch = " "
+		punch = "e",
+		hadouken = "q",
 	},
 	[2] =
 	{
@@ -16,7 +17,8 @@ local keymap =
 		down = "down",
 		left = "left",
 		right = "right",
-		punch = " "
+		punch = "return",
+		hadouken = "backspace",
 	},
 }
 
@@ -46,6 +48,8 @@ class "Controller"
 				return xaxis > 0.5
 			elseif keyname == "punch" then
 				return self.joystick:isDown(1)
+			elseif keyname == "hadouken" then
+				return self.joystick:isDown(2)
 			end
 		end
 

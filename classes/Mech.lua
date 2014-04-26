@@ -4,6 +4,7 @@ require "classes.Actor"
 require "classes.Living"
 require "classes.Shader"
 require "classes.Controller"
+require "classes.Projectile"
 
 local vector = require "lib.hump.vector"
 local registry = require "registry"
@@ -21,9 +22,11 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.pos = vector(x, y)
 		self.gravity = 0
 		self.hp = 1000
+		self.wins = 0
 		self.facingLeft = faceLeft
 		self.controller = Controller(player)
 		self.animtimer = 0
+		self.projectile = nil
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -108,6 +111,15 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self:punch(dt)
 		end
 
+		if self.projectile and self.projectile:dead() then
+			self.projectile = nil
+		end
+
+		if self.controller:isDown("hadouken") and not self.projectile then
+			local dir = self.facingLeft and -1 or 1
+			self.projectile = Projectile(self.pos.x + dir * 30, self.pos.y, dir * 30, 0)
+		end
+
 		if movement.x ~= 0 or movement.y ~= 0 then
 			self.pos = self.pos + movement*dt
 
@@ -180,5 +192,19 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*150, 10)
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 150, 10)
+
+		for i = 1, self.wins do
+			local startx = self.healthbarPosition.x
+			local dist = 18
+			if self.player == 1 then
+				startx = startx + 150
+				dist = -dist
+			end
+
+			love.graphics.setColor(255, 255, 0)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 4)
+			love.graphics.setColor(200, 50, 50)
+			love.graphics.circle("fill", startx + dist * i, self.healthbarPosition.y + 18, 3)
+		end
 	end
 }
