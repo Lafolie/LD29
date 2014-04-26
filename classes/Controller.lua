@@ -63,4 +63,7 @@ class "Controller"
 		self.joystick = joystick
 		registry.joysticks.bind(self, self.joystick)
 	end,
+	
+	update = function(self, dt)
+	end,
 }

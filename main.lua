@@ -12,6 +12,7 @@ FLOORHEIGHT = 230
 require "classes.Actor"
 require "classes.Drawable"
 require "classes.Mech"
+require "classes.AIController"
 
 local function collision(dt, aShape, bShape, dx, dy)
 	a = registry.shapes.getEntity(aShape)
@@ -42,6 +43,8 @@ function love.load()
 	collider = HC(100, collision, collision_end)
 	mech1 = Mech(100, 150, 1, false)
 	mech2 = Mech(300, 150, 2, true)
+	
+	mech2.controller = AIController(2,mech2,mech1)
 
 	controllerSelect = false
 end

@@ -75,6 +75,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	end,
 
 	update = function(self, dt)
+		self.controller:update(dt)
 		local movement = vector(0, 0)
 		if self.pos.y < FLOORHEIGHT+self.imageOffset.y then
 			-- gravitay
