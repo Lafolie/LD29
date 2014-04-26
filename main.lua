@@ -46,7 +46,14 @@ end
 
 function love.update(dt)
 	collider:update(dt)
-
+	if mech1.pos.x > mech2.pos.x then
+		mech1.enemyDirection = 'left'
+		mech2.enemyDirection = 'right'
+	else
+		mech1.enemyDirection = 'right'
+		mech2.enemyDirection = 'left'
+	end
+	
 	for i, v in registry.entities.iterate() do
 		if class.isinstance(v, Actor) then
 			v:update(dt)

@@ -93,13 +93,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		end
 		if self.controller:isDown("left") then
 			movement.x = movement.x - 50
-			if not self.facingLeft then
+			if not self.facingLeft and self.enemyDirection == 'left' then
 				self:flipFacing()
 			end
 		end
 		if self.controller:isDown("right") then
 			movement.x = movement.x + 50
-			if self.facingLeft then
+			if self.facingLeft  and self.enemyDirection == 'right' then
 				self:flipFacing()
 			end
 		end
