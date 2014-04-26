@@ -5,12 +5,16 @@ require "classes.Living"
 local vector = require "lib.hump.vector"
 local registry = require "registry"
 
-local img = love.graphics.newImage("gfx/torpedo.png")
+local img
 
 class "Projectile" (Entity, Actor, Drawable, Living)
 {
 	__init__ = function(self, x, y, vx, vy)
 		Entity.__init__(self)
+		if not img then
+			img = love.graphics.newImage("gfx/torpedo.png")
+		end
+
 		self.pos = vector(x, y)
 		self.vel = vector(vx, vy)
 		self.offset = vector(-img:getWidth()+5, -2)

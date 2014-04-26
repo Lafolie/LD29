@@ -2,13 +2,15 @@ require "classes.Entity"
 require "classes.Actor"
 require "classes.Drawable"
 
-local img = love.graphics.newImage("gfx/particles/P_Bubble.png")
-img:setFilter("nearest")
+local img
 
 class "Bubble" (Entity, Actor, Drawable)
 {
 	__init__ = function(self, x, y, mx, my)
 		Entity.__init__(self)
+		if not img then
+			img = love.graphics.newImage("gfx/particles/P_Bubble.png")
+		end
 		self.x, self.y = x, y
 		self.mx, self.my = mx or 1, my or 1
 		self.size = love.math.random()*0.5
