@@ -40,8 +40,8 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
 	collider = HC(100, collision, collision_end)
-	mech1 = Mech(100, 150, 1)
-	mech2 = Mech(300, 150, 2)
+	mech1 = Mech(100, 150, 1, false)
+	mech2 = Mech(300, 150, 2, true)
 end
 
 function love.update(dt)

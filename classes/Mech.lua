@@ -34,12 +34,13 @@ local keymap =
 
 class "Mech" (Entity, Drawable, Actor, Living)
 {
-	__init__ = function(self, x, y, player)
+	__init__ = function(self, x, y, player,faceLeft)
 		Entity.__init__(self)
 		self.player = player
 		self.pos = vector(x, y)
 		self.gravity = 0
 		self.hp = 1000
+		self.facingLeft = faceLeft
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -59,9 +60,15 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.bodyOffset = vector(-3, -5)
 		self.armOffset = vector(8, 0)
 		self.fistOffset = vector(12, 0)
+		
+		if self.facingLeft then
+			self.bodyOffset.x = - self.bodyOffset.x
+			self.armOffset.x = - self.armOffset.x 
+			self.fistOffset.x = - self.fistOffset.x
+		end
 
 		self.body = self.pos + self.bodyOffset
-		self.arm = self.pos + self.armOffset
+		self.arm = self.pos + self.armOffset 
 		self.fist = self.pos + self.fistOffset
 
 		self.body = HCShapes.newRectangleShape(self.body.x, self.body.y, 20, 19)
@@ -94,9 +101,15 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		end
 		if love.keyboard.isDown(keymap[self.player].left) then
 			movement.x = movement.x - 50
+			if not self.facingLeft then
+				self:flipFacing()
+			end
 		end
 		if love.keyboard.isDown(keymap[self.player].right) then
 			movement.x = movement.x + 50
+			if self.facingLeft then
+				self:flipFacing()
+			end
 		end
 		if love.keyboard.isDown(keymap[self.player].punch) then
 			self:punch(dt)
@@ -115,6 +128,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	
 	punch =  function(self, dt)
 		self.damagingShapes[self.fist] = { damage = 100, stuns = false, singleHit = true }
+	end,
+	
+	flipFacing = function(self)
+		self.facingLeft = not self.facingLeft
+		self.bodyOffset.x = - self.bodyOffset.x
+		self.armOffset.x = - self.armOffset.x 
+		self.fistOffset.x = - self.fistOffset.x
 	end,
 
 	collideWith = function(self, shape, other, dx, dy)
@@ -138,7 +158,11 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	draw = function(self)
 		love.graphics.setColor(255, 255, 255)
 		self.shader:apply()
-		love.graphics.draw(self.imageTemplate, (self.pos + self.imageOffset):unpack())
+		if self.facingLeft then
+			love.graphics.draw(self.imageTemplate, (self.pos - self.imageOffset).x, (self.pos + self.imageOffset).y, 0, -1, 1)
+		else
+			love.graphics.draw(self.imageTemplate, (self.pos + self.imageOffset).x, (self.pos + self.imageOffset).y)
+		end
 		self.shader:unapply()
 		love.graphics.setColor(255, 255, 255, 50)
 		drawBbox(self.body)
