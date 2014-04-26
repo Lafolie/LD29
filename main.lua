@@ -49,7 +49,25 @@ end
 function love.update(dt)
 	if controllerSelect then return end
 
+	local restart = false
+	if mech1.hp <= 0 then
+		mech2.wins = mech2.wins + 1
+		restart = true
+	end
+	if mech2.hp <= 0 then
+		mech1.wins = mech1.wins + 1
+		restart = true
+	end
+
 	collider:update(dt)
+
+	if restart then
+		mech1.hp = 1000
+		mech2.hp = 1000
+		mech1.pos.x, mech1.pos.y = 100, 150
+		mech2.pos.x, mech2.pos.y = 300, 150
+	end
+
 	if mech1.pos.x > mech2.pos.x then
 		mech1.enemyDirection = 'left'
 		mech2.enemyDirection = 'right'
