@@ -4,6 +4,7 @@ require "classes.Actor"
 require "classes.Living"
 require "classes.Shader"
 require "classes.Controller"
+require "classes.Projectile"
 
 local vector = require "lib.hump.vector"
 local registry = require "registry"
@@ -25,6 +26,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.facingLeft = faceLeft
 		self.controller = Controller(player)
 		self.animtimer = 0
+		self.projectile = nil
 		
 		if player == 1 then
 			self.healthbarPosition = vector(25,10)
@@ -106,6 +108,15 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		end
 		if self.controller:isDown("punch") then
 			self:punch(dt)
+		end
+
+		if self.projectile and self.projectile:dead() then
+			self.projectile = nil
+		end
+
+		if self.controller:isDown("hadouken") and not self.projectile then
+			local dir = self.facingLeft and -1 or 1
+			self.projectile = Projectile(self.pos.x + dir * 30, self.pos.y, dir * 30, 0)
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then

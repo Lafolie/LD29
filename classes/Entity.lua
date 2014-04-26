@@ -8,4 +8,8 @@ class "Entity"
 
 	collideWith = function(self, shape, other, first, dx, dy)
 	end,
+
+	dead = function(self)
+		return false
+	end,
 }

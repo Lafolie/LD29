@@ -28,7 +28,7 @@ function registry.entities.register(entity)
 end
 
 function registry.entities.iterate()
-	return ipairs(entities)
+	return pairs(entities)
 end
 
 --- JOYSTICKS ---
