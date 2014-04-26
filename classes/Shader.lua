@@ -1,9 +1,11 @@
 class "Shader"
 {
-	__init__ = function(self, filename)
-		local src = love.filesystem.read("glsl/" .. filename)
-		assert(src, "Shader file does not exist")
-		self.shader = love.graphics.newShader(src)
+	__init__ = function(self, filenameA, filenameB)
+		local srcA = love.filesystem.read("glsl/" .. filenameA)
+		assert(srcA, "Shader file does not exist")
+		local srcB = filenameB and love.filesystem.read("glsl/" .. filenameB)
+		assert(not filenameB or srcB, "Shader file does not exist")
+		self.shader = love.graphics.newShader(srcA, srcB)
 		print(self.shader:getWarnings())
 
 		self.uniforms = setmetatable({},
