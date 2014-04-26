@@ -57,6 +57,11 @@ end
 function love.draw()
 	love.graphics.scale(2, 2)
 
+	love.graphics.setColor(0xEA, 0xB9, 0x88)
+	love.graphics.rectangle("fill", 0, 0, 400, 300)
+	love.graphics.setColor(80, 70, 190)
+	love.graphics.rectangle("fill", 0, 0, 400, FLOORHEIGHT)
+
 	for i, v in registry.entities.iterate() do
 		if class.isinstance(v, Drawable) then
 			v:draw()

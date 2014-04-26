@@ -54,7 +54,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_TempMech.png")
 		self.shader.uniforms.user_color = {1, 0, 1}
 
-		self.imageOffset = -vector(self.imageTemplate:getDimensions())/2
+		self.size = vector(self.imageTemplate:getDimensions())
+		self.imageOffset = -self.size/2
 
 		self.bodyOffset = vector(-3, -5)
 		self.armOffset = vector(8, 0)
@@ -77,7 +78,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	update = function(self, dt)
 		local movement = vector(0, 0)
-		if self.pos.y < FLOORHEIGHT then
+		if self.pos.y < FLOORHEIGHT+self.imageOffset.y then
 			-- gravitay
 			self.gravity = self.gravity + 3 * dt
 			movement.y = self.gravity
