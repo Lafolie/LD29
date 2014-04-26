@@ -93,7 +93,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		if movement.x ~= 0 or movement.y ~= 0 then
 			self.pos = self.pos + movement*dt
 
-			if self.pos.y < 460 then self.pos.y = 460 end
+			if self.pos.y > 460 then self.pos.y = 460 end
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
 			self.rightArm:moveTo((self.pos + self.rightArmOffset):unpack())
