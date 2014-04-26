@@ -57,7 +57,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.rightLeg = HCShapes.newRectangleShape(self.rightLeg.x, self.rightLeg.y, 15, 60)
 		self.rightFist = HCShapes.newRectangleShape(self.rightFist.x-15, self.rightFist.y-15, 30, 30)
 		
-		self.damagingShapes[self.rightFist] = true
+		self.damagingShapes[self.rightFist] = { damage = 100, stuns = false }
 
 		registry.shapes.register(self, self.body)
 		registry.shapes.register(self, self.rightArm)
@@ -101,7 +101,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	collideWith = function(self, shape, other, dx, dy)
 		if self.damagingShapes[shape] and class.isinstance(other, Living) then
-			other:damage(9001)
+			other:damage(self.damagingShapes[shape].damage)
 		end
 	end,
 
