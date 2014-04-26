@@ -1,7 +1,8 @@
 class "Shader"
 {
 	__init__ = function(self, filename)
-		local src = love.filesystem.read(filename)
+		local src = love.filesystem.read("glsl/" .. filename)
+		assert(src, "Shader file does not exist")
 		self.shader = love.graphics.newShader(src)
 		print(self.shader:getWarnings())
 

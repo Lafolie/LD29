@@ -2,8 +2,9 @@ require "classes.Entity"
 require "classes.Drawable"
 require "classes.Actor"
 require "classes.Living"
-local vector = require "lib.hump.vector"
+require "classes.Shader"
 
+local vector = require "lib.hump.vector"
 local registry = require "registry"
 
 local function drawBbox(shape)
@@ -66,6 +67,11 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		registry.shapes.register(self, self.leftLeg)
 		registry.shapes.register(self, self.rightArm)
 		registry.shapes.register(self, self.rightFist)
+
+		self.imageTemplate = love.graphics.newImage("gfx/S_TempMech.png")
+		self.shader = Shader("mechPaint.glsl")
+		self.shader.uniforms.mask = love.graphics.newImage("gfx/M_TempMech.png")
+		self.shader.uniforms.user_color = {1, 0, 1}
 	end,
 
 	update = function(self, dt)
@@ -128,5 +134,10 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 		love.graphics.setColor(255, 0, 0)
 		love.graphics.point(self.pos.x, self.pos.y)
+
+		love.graphics.setColor(255, 255, 255)
+		self.shader:apply()
+		love.graphics.draw(self.imageTemplate, self.pos.x, self.pos.y)
+		self.shader:unapply()
 	end,
 }
