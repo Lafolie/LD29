@@ -1,12 +1,14 @@
 class = require "lib.slither" -- BOO, globals
 local HC = require "lib.HardonCollider"
-local registry = require "shaperegistry"
+local registry = require "registry"
 
-local collider
+require "classes.Actor"
+require "classes.Drawable"
+require "classes.Mech"
 
 local function collision(dt, aShape, bShape, dx, dy)
-	a = registry.getEntity(aShape)
-	b = registry.getEntity(bShape)
+	a = registry.shapes.getEntity(aShape)
+	b = registry.shapes.getEntity(bShape)
 
 	if not a and not b then
 		print("Collision occured between non-entities")
@@ -18,22 +20,34 @@ local function collision(dt, aShape, bShape, dx, dy)
 		return
 	end
 
-	-- entity:collideWith(other, first, dx, dy)
-	a:collideWith(b, true, dx, dy)
-	b:collideWith(a, false, 0, 0)
+	-- entity:collideWith(shape, other, first, dx, dy)
+	a:collideWith(aShape, b, true, dx, dy)
+	b:collideWith(bShape, a, false, 0, 0)
 end
 
 local function collision_end(dt, a, b, dx, dy)
 end
 
+local mech
 function love.load()
 	collider = HC(100, collision, collision_end)
+	mech = Mech(50, 50)
 end
 
 function love.update(dt)
 	collider:update(dt)
+
+	for i, v in registry.entities.iterate() do
+		if class.isinstance(v, Actor) then
+			v:update(dt)
+		end
+	end
 end
 
 function love.draw()
-	love.graphics.rectangle("fill", 50, 50, 50, 50)
+	for i, v in registry.entities.iterate() do
+		if class.isinstance(v, Drawable) then
+			v:draw()
+		end
+	end
 end
