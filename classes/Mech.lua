@@ -139,6 +139,14 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 			if self.pos.y > FLOORHEIGHT+self.imageOffset.y then
 				self.pos.y = FLOORHEIGHT+self.imageOffset.y
+			elseif self.pos.y < 14 then
+				self.pos.y = 14
+			end
+			
+			if self.pos.x < 13 then
+				self.pos.x = 13
+			elseif self.pos.x > 187 then
+				self.pos.x = 187
 			end
 
 			self.body:moveTo((self.pos + self.bodyOffset):unpack())
