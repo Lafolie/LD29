@@ -78,7 +78,7 @@ function love.update(dt)
 	if love.math.random() > 0.97 then
 		table.insert(bubbles,
 			Bubble(love.math.random(200), love.math.random(FLOORHEIGHT),
-				1, -1, 40))
+				0, -1, 40))
 	end
 
 	local restart = false
