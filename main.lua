@@ -57,6 +57,11 @@ function love.load()
 	mech2.controller = AIController(2,mech2,mech1)
 
 	controllerSelect = false
+	roundTimer = 99
+	timerTick = 1
+	timerFont = love.graphics.newFont("font/BMarmy.TTF", 12)
+	timerFont:setFilter("nearest", "nearest")
+	love.graphics.setFont(timerFont)
 end
 
 function love.update(dt)
@@ -74,11 +79,26 @@ function love.update(dt)
 
 	collider:update(dt)
 
+	timerTick = timerTick - dt
+	if timerTick <= 0 then
+		timerTick = 1
+		roundTimer = roundTimer - 1
+		if roundTimer <= 0 then
+			if mech1.hp > mech2.hp then
+				mech1.wins = mech1.wins + 1
+			else
+				mech2.wins = mech2.wins + 1
+			end
+			restart = true
+		end
+	end
+
 	if restart then
 		mech1.hp = 1000
 		mech2.hp = 1000
 		mech1.pos.x, mech1.pos.y = 50, 80
 		mech2.pos.x, mech2.pos.y = 150, 80
+		roundTimer = 99
 
 		if mech1.projectile then mech1.projectile:kill() end
 		if mech2.projectile then mech2.projectile:kill() end
@@ -112,6 +132,11 @@ function love.draw()
 			v:draw()
 		end
 	end
+
+	love.graphics.setColor(38, 38, 38, 255)
+	love.graphics.print(roundTimer, 90, 4)
+	love.graphics.setColor(225, 200, 100, 255)
+	love.graphics.print(roundTimer, 89, 3)
 
 	if controllerSelect then
 		love.graphics.origin()
