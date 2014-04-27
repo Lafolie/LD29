@@ -19,6 +19,8 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 		self.vel = vector(vx, vy)
 		self.offset = vector(-img:getWidth()+5, -2)
 		self.hitTarget = false
+		self.bubbles = {}
+		self.bubbletimer = 0
 
 		self.body = HCShapes.newCircleShape(x, y, 5)
 		registry.shapes.register(self, self.body)
@@ -27,11 +29,27 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 	update = function(self, dt)
 		self.pos = self.pos + self.vel*dt
 		self.body:moveTo(self.pos:unpack())
+
+		self.bubbletimer = self.bubbletimer + dt
+		if self.bubbletimer > 0.075 then
+			self.bubbletimer = 0
+			local dir = self.vel.x > 0 and -1 or 1
+			local x = self.pos.x + (img:getWidth()-5)*dir
+			table.insert(self.bubbles, Bubble(x, self.pos.y, dir))
+		end
 	end,
 
 	draw = function(self)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.draw(img, (self.pos+self.offset):unpack())
+		local pos = self.pos
+		local dir = -1
+		if self.vel.x > 0 then
+			pos = pos + self.offset
+			dir = 1
+		else
+			pos = pos - self.offset
+		end
+		love.graphics.draw(img, pos.x, pos.y, 0, dir)
 	end,
 
 	dead = function(self)

@@ -131,7 +131,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 		if self.controller:isDown("hadouken") and not self.projectile then
 			local dir = self.facingLeft and -1 or 1
-			self.projectile = Projectile(self.pos.x + dir * 25, self.pos.y, dir * 30, 0)
+			self.projectile = Projectile(self.pos.x + dir * 25, self.pos.y, dir * 70, 0)
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
