@@ -57,7 +57,7 @@ function love.load()
 	mech2.controller = AIController(2,mech2,mech1)
 
 	controllerSelect = false
-	roundTimer = 99
+	roundTimer = 90
 	timerTick = 1
 	timerFont = love.graphics.newFont("font/BMarmy.TTF", 12)
 	timerFont:setFilter("nearest", "nearest")

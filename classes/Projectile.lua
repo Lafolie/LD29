@@ -2,6 +2,7 @@ require "classes.Entity"
 require "classes.Actor"
 require "classes.Drawable"
 require "classes.Living"
+require "classes.Timer"
 local vector = require "lib.hump.vector"
 local registry = require "registry"
 
@@ -20,7 +21,11 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 		self.offset = vector(-img:getWidth()+5, -2)
 		self.hitTarget = false
 		self.bubbles = {}
-		self.bubbletimer = 0
+		self.bubbletimer = Timer("periodic", 0.075, function()
+			local dir = self.vel.x > 0 and -1 or 1
+			local x = self.pos.x + (img:getWidth()-5)*dir
+			table.insert(self.bubbles, Bubble(x, self.pos.y, dir, -1))
+		end)
 
 		self.body = HCShapes.newCircleShape(x, y, 5)
 		registry.shapes.register(self, self.body)
@@ -30,13 +35,7 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 		self.pos = self.pos + self.vel*dt
 		self.body:moveTo(self.pos:unpack())
 
-		self.bubbletimer = self.bubbletimer + dt
-		if self.bubbletimer > 0.075 then
-			self.bubbletimer = 0
-			local dir = self.vel.x > 0 and -1 or 1
-			local x = self.pos.x + (img:getWidth()-5)*dir
-			table.insert(self.bubbles, Bubble(x, self.pos.y, dir, -1))
-		end
+		self.bubbletimer:update(dt)
 	end,
 
 	draw = function(self)

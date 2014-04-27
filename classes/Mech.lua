@@ -6,6 +6,7 @@ require "classes.Shader"
 require "classes.Controller"
 require "classes.Projectile"
 require "classes.Bubble"
+require "classes.Timer"
 
 local vector = require "lib.hump.vector"
 local registry = require "registry"
@@ -29,7 +30,17 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.animtimer = 0
 		self.projectile = nil
 		self.bubbles = {}
-		self.bubbletimer = 0
+		self.bubbletimer = Timer("periodic", 0.025, function()
+			if self.controller:isDown("up") or self.controller:isDown("down") then
+				local xoff = self.facingLeft and 9 or -12
+				table.insert(self.bubbles, Bubble(self.pos.x+xoff, self.pos.y+2))
+			end
+		end)
+
+		self.canAttack = false
+		self.attackTimer = Timer("once", 1.5, function()
+			self.canAttack = true
+		end)
 		
 		
 		if player == 1 then
@@ -85,6 +96,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 
 	update = function(self, dt)
 		self.controller:update(dt)
+		self.attackTimer:update(dt)
+
 		local movement = vector(0, 0)
 		if self.pos.y < FLOORHEIGHT+self.imageOffset.y then
 			-- gravitay
@@ -94,23 +107,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self.gravity = 0
 		end
 
-		self.bubbletimer = self.bubbletimer + dt
+		self.bubbletimer:update(dt)
 		if self.controller:isDown("up") then
 			movement.y = movement.y - 50
 			self.gravity = 0
-			if self.bubbletimer > 0.025 then
-				local xoff = self.facingLeft and 9 or -12
-				table.insert(self.bubbles, Bubble(self.pos.x+xoff, self.pos.y+2))
-				self.bubbletimer = 0
-			end
 		end
 		if self.controller:isDown("down") then
 			movement.y = movement.y + 50
-			if self.bubbletimer > 0.025 then
-				local xoff = self.facingLeft and 9 or -12
-				table.insert(self.bubbles, Bubble(self.pos.x+xoff, self.pos.y+2, 1, -1))
-				self.bubbletimer = 0
-			end
 		end
 		if self.controller:isDown("left") then
 			movement.x = movement.x - 50
@@ -124,7 +127,7 @@ class "Mech" (Entity, Drawable, Actor, Living)
 				self:flipFacing()
 			end
 		end
-		if self.controller:isDown("punch") then
+		if self.controller:isDown("punch") and self.canAttack then
 			self:punch(dt)
 		end
 
@@ -132,9 +135,11 @@ class "Mech" (Entity, Drawable, Actor, Living)
 			self.projectile = nil
 		end
 
-		if self.controller:isDown("hadouken") and not self.projectile then
+		if self.controller:isDown("hadouken") and not self.projectile and self.canAttack then
 			local dir = self.facingLeft and -1 or 1
 			self.projectile = Projectile(self.pos.x + dir * 25, self.pos.y, dir * 70, 0)
+			self.canAttack = false
+			self.attackTimer:reset()
 		end
 
 		if movement.x ~= 0 or movement.y ~= 0 then
@@ -172,6 +177,8 @@ class "Mech" (Entity, Drawable, Actor, Living)
 	
 	punch =  function(self, dt)
 		self.damagingShapes[self.fist] = { damage = 100, stuns = false, singleHit = true }
+		self.attackTimer:reset()
+		self.canAttack = false
 	end,
 	
 	flipFacing = function(self)
