@@ -6,7 +6,7 @@ local img
 
 class "Bubble" (Entity, Actor, Drawable)
 {
-	__init__ = function(self, x, y, mx, my)
+	__init__ = function(self, x, y, mx, my, maxAlpha)
 		Entity.__init__(self)
 		if not img then
 			img = love.graphics.newImage("gfx/particles/P_Bubble.png")
@@ -14,6 +14,7 @@ class "Bubble" (Entity, Actor, Drawable)
 		self.x, self.y = x, y
 		self.mx, self.my = mx or 1, my or 1
 		self.size = love.math.random()*0.5
+		self.maxAlpha = maxAlpha or 255
 
 		self.lifetime = love.math.random()*2+1
 		self.vx, self.vy = love.math.random()*6-1.5, love.math.random()*6
@@ -24,7 +25,7 @@ class "Bubble" (Entity, Actor, Drawable)
 		self.x = self.x + self.mx * self.vx * dt
 		self.y = self.y + self.my * self.vy * dt
 		self.size = self.size + 0.25 * dt
-		self.alpha = self.lifetime < 1 and math.floor(self.lifetime * 255) or 255
+		self.alpha = self.lifetime < 1 and math.floor(self.lifetime * self.maxAlpha) or self.maxAlpha
 	end,
 
 	dead = function(self)

@@ -46,7 +46,7 @@ end
 local function collision_end(dt, a, b, dx, dy)
 end
 
-local mech1, mech2, controllerSelect
+local mech1, mech2, controllerSelect, bubbles
 function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -62,10 +62,24 @@ function love.load()
 	timerFont = love.graphics.newFont("font/BMarmy.TTF", 12)
 	timerFont:setFilter("nearest", "nearest")
 	love.graphics.setFont(timerFont)
+
+	bubbles = {}
 end
 
 function love.update(dt)
 	if controllerSelect then return end
+
+	for i, v in pairs(bubbles) do
+		if v:dead() then
+			bubbles[i] = nil
+		end
+	end
+
+	if love.math.random() > 0.97 then
+		table.insert(bubbles,
+			Bubble(love.math.random(200), love.math.random(FLOORHEIGHT),
+				1, -1, 40))
+	end
 
 	local restart = false
 	if mech1.hp <= 0 then
