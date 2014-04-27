@@ -133,8 +133,15 @@ end
 function love.keypressed(key)
 	if key == "escape" then
 		print("What's wrong, Lafolie?!")
-		if os.getenv("USER") == "Dale" then
-			love.timer.sleep(2)
+		if os.getenv("USERNAME") == "Dale" then
+			love.graphics.present()
+			love.graphics.origin()
+			love.graphics.setColor(255, 0, 0)
+			love.graphics.rectangle("fill", 0, 0, 800, 600)
+			love.graphics.setColor(0, 0, 0)
+			love.graphics.print("UMADBRO?", 400, 300)
+			love.graphics.present()
+			love.timer.sleep(0.5)
 		end
 		love.event.quit()
 	end
