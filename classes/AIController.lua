@@ -14,8 +14,9 @@ class "AIController"
 		self.heightThreshold = 5
 		self.desiredHorizontal = 0
 		self.horizontalThreshold = 5
+		self.matchHeight = true
+		self.goInForKill = false
 		print("Cerberus AI Initiated")
-		print("Kill mode Engaged")
 	end,
 
 	isDown = function(self, keyname)
@@ -45,7 +46,11 @@ class "AIController"
 			end
 		else
 			--return self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y < -20
-			return self.playerMech.pos.y - self.desiredHeight > self.heightThreshold 
+			if self.matchHeight then
+				return self.playerMech.pos.y - self.enemyMech.pos.y > self.heightThreshold
+			else
+				return self.playerMech.pos.y - self.desiredHeight > self.heightThreshold
+			end
 		end
 	end,
 	
@@ -60,13 +65,20 @@ class "AIController"
 			end
 		else
 			 --return self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y > 20
-			return self.desiredHeight - self.playerMech.pos.y > self.heightThreshold 
+			if self.matchHeight then
+				return self.enemyMech.pos.y - self.playerMech.pos.y > self.heightThreshold 
+			else
+				return self.desiredHeight - self.playerMech.pos.y > self.heightThreshold
+			end
 		end
 	end,
 	
 	shouldMoveLeft = function(self)
 		if self.enemyMech.pos.x - self.playerMech.pos.x < -5 and not self.playerMech.facingLeft then
 			return true
+		elseif self.goInForKill then
+			return self.playerMech.pos.x > self.enemyMech.pos.x and self.playerMech.pos.x > self.enemyMech.pos.x + 20 - self.horizontalThreshold 
+				or (self.playerMech.pos.x < self.enemyMech.pos.x and self.enemyMech.pos.x < self.playerMech.pos.x + 20 + self.horizontalThreshold)
 		else
 			return self.playerMech.pos.x - self.desiredHorizontal > self.horizontalThreshold 
 		end 
@@ -75,6 +87,9 @@ class "AIController"
 	shouldMoveRight = function(self)
 		if self.enemyMech.pos.x - self.playerMech.pos.x > 5 and self.playerMech.facingLeft then
 			return true
+		elseif self.goInForKill then
+			return self.enemyMech.pos.x > self.playerMech.pos.x and self.enemyMech.pos.x > self.playerMech.pos.x + 20 - self.horizontalThreshold 
+				or (self.enemyMech.pos.x < self.playerMech.pos.x and self.playerMech.pos.x < self.enemyMech.pos.x + 20 + self.horizontalThreshold)
 		else
 			return self.desiredHorizontal - self.playerMech.pos.x > self.horizontalThreshold 
 		end
@@ -102,13 +117,31 @@ class "AIController"
 		self.timeTillEvaluate = self.timeTillEvaluate - dt
 		if(self.timeTillEvaluate < 0) then
 			self.timeTillEvaluate = 3
-			
-			self.desiredHeight = love.math.random(25,150) 
-			print(self.desiredHeight)
-			self.heightThreshold = love.math.random(5,20)
-			
-			self.desiredHorizontal = love.math.random(7,87) + love.math.random(7,100) -- 2 rands to give higher weighting to centre of screen
-			self.horizontalThreshold = love.math.random(5,20)
+			local randomState = love.math.random(0,10)
+			if(randomState > 7) then
+				print("Kill mode Engaged")
+				self.goInForKill = true
+				self.heightThreshold = 5
+				self.matchHeight = true
+				self.horizontalThreshold = 5
+			elseif(randomState > 4) then
+				print("Track Height")
+				self.matchHeight = true
+				self.heightThreshold = love.math.random(5,20)
+				
+				self.goInForKill = false
+				self.desiredHorizontal = love.math.random(7,87) + love.math.random(7,100) -- 2 rands to give higher weighting to centre of screen
+				self.horizontalThreshold = love.math.random(5,20)
+			else
+				print("Hold Ground")
+				self.matchHeight = false
+				self.desiredHeight = love.math.random(25,150) 
+				self.heightThreshold = love.math.random(5,20)
+				
+				self.goInForKill = false
+				self.desiredHorizontal = love.math.random(7,87) + love.math.random(7,100) -- 2 rands to give higher weighting to centre of screen
+				self.horizontalThreshold = love.math.random(5,20)
+			end
 		end
 		
 	end,
