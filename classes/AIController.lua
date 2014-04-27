@@ -1,4 +1,5 @@
 local registry = require "registry"
+local vector = require "lib.hump.vector"
 
 local keymap =
 {
@@ -28,6 +29,8 @@ class "AIController"
 		self.keymap = keymap[self.player]
 		self.playerMech = playerMech
 		self.enemyMech = enemyMech
+		self.enemyVel = vector(0, 0)
+		self.lastEnemyPosition = self.enemyMech.pos
 		print("Cerberus AI Initiated")
 		print("Kill mode Engaged")
 	end,
@@ -37,6 +40,8 @@ class "AIController"
 			return self:shouldJump()
 		elseif keyname == "down" then
 			return self:shouldDive()
+		elseif keyname == "hadouken" then
+			return self:shouldHadouken()
 		end
 
 		return false
@@ -52,7 +57,7 @@ class "AIController"
 				end
 			end
 		else
-			return self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y < -15	
+			return self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y < -20	
 		end
 	end,
 	
@@ -66,11 +71,27 @@ class "AIController"
 				end
 			end
 		else
-			return self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y > 15	
+			return self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyMech.pos.y - self.playerMech.pos.y > 20	
 		end
 	end,
 	
-	update = function(self, dt)
+	shouldHadouken = function(self)
+		if self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyVel.y > 1 then
+			if self.playerMech.pos.y - self.enemyMech.pos.y > 15 then
+				return true
+			end
+		elseif self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyVel.y < -1 then
+			if self.playerMech.pos.y - self.enemyMech.pos.y < -15 then
+				return true
+			end
+		else
+			return false
+		end
+		
+	end,
 	
+	update = function(self, dt)
+		self.enemyVel = self.enemyMech.pos - self.lastEnemyPosition 
+		self.lastEnemyPosition = self.enemyMech.pos
 	end,
 }
