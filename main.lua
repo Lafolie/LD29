@@ -100,7 +100,7 @@ function love.update(dt)
 		if roundTimer <= 0 then
 			if mech1.hp > mech2.hp then
 				mech1.wins = mech1.wins + 1
-			else
+			elseif mech1.hp < mech2.hp then
 				mech2.wins = mech2.wins + 1
 			end
 			restart = true
