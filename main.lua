@@ -134,9 +134,9 @@ function love.draw()
 	end
 
 	love.graphics.setColor(38, 38, 38, 255)
-	love.graphics.print(roundTimer, 90, 4)
+	love.graphics.print(roundTimer, 91, 4)
 	love.graphics.setColor(225, 200, 100, 255)
-	love.graphics.print(roundTimer, 89, 3)
+	love.graphics.print(roundTimer, 90, 3)
 
 	if controllerSelect then
 		love.graphics.origin()
