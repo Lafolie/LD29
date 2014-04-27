@@ -5,7 +5,6 @@ class "AIController"
 {
 	__init__ = function(self, player, playerMech, enemyMech)
 		self.player = player
-		self.keymap = keymap[self.player]
 		self.playerMech = playerMech
 		self.enemyMech = enemyMech
 		self.enemyVel = vector(0, 0)
