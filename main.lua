@@ -77,8 +77,8 @@ function love.update(dt)
 	if restart then
 		mech1.hp = 1000
 		mech2.hp = 1000
-		mech1.pos.x, mech1.pos.y = 50, 80
-		mech2.pos.x, mech2.pos.y = 150, 80
+		mech1.pos.x, mech1.pos.y = 100, 150
+		mech2.pos.x, mech2.pos.y = 300, 150
 
 		if mech1.projectile then mech1.projectile:kill() end
 		if mech2.projectile then mech2.projectile:kill() end
@@ -132,10 +132,8 @@ end
 
 function love.keypressed(key)
 	if key == "escape" then
-		print("What's wrong, Lafolie?!")
-		if os.getenv("USER") == "Dale" then
-			love.timer.sleep(2)
-		end
+		print("What's wrong Lafolie?!")
+		-- love.timer.sleep(2)
 		love.event.quit()
 	end
 
