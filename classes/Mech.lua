@@ -31,10 +31,13 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		self.bubbles = {}
 		self.bubbletimer = 0
 		
+		
 		if player == 1 then
 			self.healthbarPosition = vector(12,5)
+			self.hpFrame = love.graphics.newImage("gfx/gui/hpFrame_Player.png")
 		else
 			self.healthbarPosition = vector(112,5)
+			self.hpFrame = love.graphics.newImage("gfx/gui/hpFrame_Enemy.png")
 		end
 		
 		self.damagingShapes = {}
@@ -217,9 +220,18 @@ class "Mech" (Entity, Drawable, Actor, Living)
 		local lifeperc = self.hp/1000
 		local r, g = (1-lifeperc*lifeperc)*255, (1-(1-lifeperc)*(1-lifeperc))*255
 		love.graphics.setColor(r, g, 0)
-		love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*75, 5)
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 75, 5)
+		if self.player == 1 then
+			love.graphics.rectangle("fill", self.healthbarPosition.x, self.healthbarPosition.y, self.hp/1000*75, 5)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.draw(self.hpFrame, self.healthbarPosition.x-5, self.healthbarPosition.y-2)
+		else
+			love.graphics.rectangle("fill", self.healthbarPosition.x + (75 - self.hp/1000*75), self.healthbarPosition.y, self.hp/1000*75, 5)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.draw(self.hpFrame, self.healthbarPosition.x-2, self.healthbarPosition.y-2)
+		end
+		
+		--love.graphics.rectangle("line", self.healthbarPosition.x, self.healthbarPosition.y, 75, 5)
+		
 
 		for i = 1, self.wins do
 			local startx = self.healthbarPosition.x
