@@ -94,4 +94,8 @@ class "AIController"
 		self.enemyVel = self.enemyMech.pos - self.lastEnemyPosition 
 		self.lastEnemyPosition = self.enemyMech.pos
 	end,
+
+	hasJoystick = function(self)
+		return true -- Always be ineligible for joystick attachment
+	end,
 }
