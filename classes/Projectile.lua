@@ -35,7 +35,7 @@ class "Projectile" (Entity, Actor, Drawable, Living)
 			self.bubbletimer = 0
 			local dir = self.vel.x > 0 and -1 or 1
 			local x = self.pos.x + (img:getWidth()-5)*dir
-			table.insert(self.bubbles, Bubble(x, self.pos.y, dir))
+			table.insert(self.bubbles, Bubble(x, self.pos.y, dir, -1))
 		end
 	end,
 
