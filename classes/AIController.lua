@@ -30,6 +30,8 @@ class "AIController"
 			return self:shouldMoveRight()
 		elseif keyname == "hadouken" then
 			return self:shouldHadouken()
+		elseif keyname == "punch" then
+			return self:shouldPunch()
 		end
 
 		return false
@@ -110,21 +112,26 @@ class "AIController"
 		
 	end,
 	
+	shouldPunch = function(self)
+		return self.playerMech.pos.x  - self.enemyMech.pos.x < 25 and self.playerMech.pos.x  - self.enemyMech.pos.x > -25
+		and self.playerMech.pos.y  - self.enemyMech.pos.y < 20 and self.playerMech.pos.y  - self.enemyMech.pos.y > -20
+	end,
+	
 	update = function(self, dt)
 		self.enemyVel = (self.enemyMech.pos - self.lastEnemyPosition)/dt
 		self.lastEnemyPosition = self.enemyMech.pos
 		
 		self.timeTillEvaluate = self.timeTillEvaluate - dt
 		if(self.timeTillEvaluate < 0) then
-			self.timeTillEvaluate = 3
+			self.timeTillEvaluate = love.math.random(2,5)
 			local randomState = love.math.random(0,10)
-			if(randomState > 7) then
+			if(randomState > 6) then
 				print("Kill mode Engaged")
 				self.goInForKill = true
 				self.heightThreshold = 5
 				self.matchHeight = true
 				self.horizontalThreshold = 5
-			elseif(randomState > 4) then
+			elseif(randomState > 3) then
 				print("Track Height")
 				self.matchHeight = true
 				self.heightThreshold = love.math.random(5,20)
