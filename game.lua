@@ -54,9 +54,6 @@ function game.load()
 	controllerSelect = false
 	roundTimer = 90
 	timerTick = 1
-	timerFont = love.graphics.newFont("font/BMarmy.TTF", 12)
-	timerFont:setFilter("nearest", "nearest")
-	love.graphics.setFont(timerFont)
 
 	bubbles = {}
 end

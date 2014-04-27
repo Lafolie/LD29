@@ -1,24 +1,40 @@
 class = require "lib.slither" -- BOO, globals
-local HC = require "lib.HardonCollider"
-local registry = require "registry"
 local game = require "game"
+local menu = require "menu"
 
 HCShapes = require "lib.HardonCollider.shapes"
 function HCShapes.newRectangleShape(x, y, w, h)
 	return HCShapes.newPolygonShape(x, y, x+w, y, x+w, y+h, x, y+h)
 end
 
+local state = menu
+
+function switchState(name)
+	if name == "game" then
+		state = game
+	elseif name == "menu" then
+		state = menu
+	end
+
+	state.load()
+end
+
 function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
-	game.load()
+
+	timerFont = love.graphics.newFont("font/BMarmy.TTF", 12)
+	timerFont:setFilter("nearest", "nearest")
+	love.graphics.setFont(timerFont)
+
+	state.load()
 end
 
 function love.update(dt)
-	game.update(dt)
+	state.update(dt)
 end
 
 function love.draw()
-	game.draw()
+	state.draw()
 end
 
 function love.keypressed(key)
@@ -30,11 +46,11 @@ function love.keypressed(key)
 		return love.event.quit()
 	end
 
-	game.keypressed(key)
+	state.keypressed(key)
 end
 
 function love.joystickpressed(joystick, button)
-	game.joystickpressed(joystick, button)
+	state.joystickpressed(joystick, button)
 end
 
 function print(...)
