@@ -1,3 +1,5 @@
+require "classes.Timer"
+
 local menu = {}
 
 local options = {
@@ -6,13 +8,20 @@ local options = {
 }
 
 local selection = 1
-local xOff, yOff
+local xOff, yOff, xTarget, yTarget, t
 
 function menu.load()
+	xOff, yOff = 0, 0
+	xTarget, yTarget = 0, 0
+	t = Timer("periodic", 0.050, function()
+		xTarget, yTarget = love.math.random()*6-3, love.math.random()*6-3
+	end)
 end
 
 function menu.update(dt)
-	xOff, yOff = love.math.random()*2, love.math.random()*2
+	t:update(dt)
+	xOff = xOff - (xOff-xTarget)*dt
+	yOff = yOff - (yOff-yTarget)*dt
 end
 
 function menu.draw()
