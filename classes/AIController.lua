@@ -54,11 +54,11 @@ class "AIController"
 	end,
 	
 	shouldHadouken = function(self)
-		if self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyVel.y > 1 then
+		if self.enemyMech.pos.y < self.playerMech.pos.y and self.enemyVel.y > 10 then
 			if self.playerMech.pos.y - self.enemyMech.pos.y > 15 then
 				return true
 			end
-		elseif self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyVel.y < -1 then
+		elseif self.enemyMech.pos.y > self.playerMech.pos.y and self.enemyVel.y < -10 then
 			if self.playerMech.pos.y - self.enemyMech.pos.y < -15 then
 				return true
 			end
@@ -69,7 +69,7 @@ class "AIController"
 	end,
 	
 	update = function(self, dt)
-		self.enemyVel = self.enemyMech.pos - self.lastEnemyPosition 
+		self.enemyVel = (self.enemyMech.pos - self.lastEnemyPosition) /dt 
 		self.lastEnemyPosition = self.enemyMech.pos
 	end,
 
