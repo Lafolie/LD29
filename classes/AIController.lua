@@ -69,7 +69,7 @@ class "AIController"
 	end,
 	
 	update = function(self, dt)
-		self.enemyVel = self.enemyMech.pos - self.lastEnemyPosition 
+		self.enemyVel = (self.enemyMech.pos - self.lastEnemyPosition)/dt
 		self.lastEnemyPosition = self.enemyMech.pos
 	end,
 
